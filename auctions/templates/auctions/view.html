@@ -1,0 +1,107 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Listing: {{ list.title }}</h2>
+    {% if not list.open %}
+        <h5 style="color: red;">LISTING CLOSED</h5>
+        {% if list.winner == user %}
+            <h4>You Have Won!</h4>
+        {% endif %}
+    {% endif %}
+    {% if list.open %}
+        {% if user.is_authenticated %}
+            <form action="/{{ list.title }}" method="POST">
+            {% csrf_token %}    
+            {% if watchlist %}
+                <button type="button" class="btn btn-secondary btn-sm" >Watchlist</button>
+                <input class="btn btn-outline-danger btn-sm" type="submit" name="watchlist" value="Remove from Watchlist"> 
+            {% else %}
+                <input class="btn btn-outline-secondary btn-sm" type="submit" name="watchlist" value="Add to Watchlist"> 
+            {% endif %}
+            </form>
+        {% else %}
+            <p>Log In or Register to Add to Watchlist</p>
+        {% endif %}
+    {% endif %}
+    {% if not list.image_url == "" %}
+    <div>
+        <img style="padding-bottom: 15px; padding-top: 20px" height="200px" src="{{ list.image_url }}" alt="Image not available.">
+    </div>
+    {% endif %}
+    <p> {{ list.description }} </p>
+    <h3>${{ list.price }}</h3>
+    <hr>
+    <h4>Details</h4>
+        <ul>
+            <li>Created by {{ list.lister }}</li>
+            <li>Category: 
+                {% if list.category is not None %}
+                {{ list.category }}
+                {% else %}
+                No Category Listed.
+                {% endif %}
+                
+            </li>
+            <li>Posted {{ list.time  }}</li>
+            {% if not list.open %}
+            <li>Winner: {{list.winner}}</li>
+            {% endif %}
+        </ul>
+    <hr>    
+    {% if list.open %} 
+        {% if user.is_authenticated %}
+            {% if list.lister == user %}
+                <form action="/{{ list.title }}" method="POST" style="width:50%">
+                {% csrf_token %}    
+                    <div class="form-group">
+                        <input class="form-control btn btn-outline-danger" type="submit" name="close" value="Close Listing">
+                    </div>
+                    <small>Close this Listing and the Current Bidder will win.</small>
+                </form>
+            {% endif %}
+        {% endif %}
+        {% if user.is_authenticated %}
+            <form action="/{{ list.title }}" method="POST" style="width:50%">
+            {% csrf_token %}   
+                <div class="form-group">
+                    Place New Bid:<input name="new_bid" class="form-control" type="number" required min="{{ list.price }}" value="{{ list.price }}">
+                </div>
+                <div class="form-group">
+                    <input class="form-control btn-sm btn-outline-primary" type="submit" name="bid" value="Place Bid">
+                </div>
+            </form>
+        {% else %}
+            <p>Log In or Register to Place Bids</p>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <form action="/{{ list.title }}" method="POST" style="width:50%">
+            {% csrf_token %}
+                <div class="form-group">
+                    Comment:
+                    <textarea class="form-control" name="new_comment" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <input class="form-control btn-sm btn-outline-primary" type="submit" name="comment" value="Submit Comment">
+                </div>
+            </form>
+        {% else %}
+            <p>Log In or Register to Add Comment</p>
+        {% endif %}
+    {% endif %}
+    <h4>Comments:</h4>
+    <ul>
+        {% if comments == "No Comments" %}
+        <p>No Comments</p>
+        {% else %}
+            {% for comment in comments %}
+            <li>
+                <h5>{{ comment.user.username }} posted...</h5>
+                <p>
+                    {{ comment.comment }}
+                </p>
+            </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    
+{% endblock %}

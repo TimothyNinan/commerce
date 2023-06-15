@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    <hr>
+    <div class="row row-cols-1 row-cols-md-2">
+        {% for listing in listings %}
+            <div class="card mb-3" style="max-width: 500px; min-width: 450px; margin:auto;">
+                <div class="row no-gutters">
+                <div class="col-md-4" style="height: 180px;">
+                    <img src="{{ listing.image_url }}" height="180px" class="card-img" alt="Image Not Available">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="/{{listing.title}}">{{listing.title}}</a></h5>
+                        <p class="card-text">{{ listing.description }}</p>
+                        <p class="card-text"><b>Current Price: ${{listing.price}}</b></p>
+                        <p class="card-text"><small class="text-muted">Created {{ listing.time }}</small></p>
+                    </div>
+                </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+  
+    
+    
+
+
+    
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create Listing</h2>
+
+    <form method="POST" action="/list" style="width:50%">
+        {% csrf_token %}
+        <div class="form-group">
+            Title:
+            <input name="title" class="form-control" type="text" required>
+        </div>
+        <div class="form-group">
+            Category:
+            <select name="category" class="form-control" required>
+                <option></option>
+                <option value="Home">Home and Garden</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Art">Collectibles and Art</option>
+                <option value="Sports">Sporting Goods</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Toys">Toys and Hobbies</option>
+                <option value="Memorabilia">Memorabilia</option>
+                <option value="Motors">Motors</option>
+                <option value="Books">Literature</option>
+                <option value="Music">Music</option>
+                <option value="Health">Health and Beauty</option>
+            </select>
+        </div>
+        <div class="form-group">
+            Descrption:
+            <textarea class="form-control" name="description" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+            Starting Bid:
+            <input name="start_bid" class="form-control" type="number" required>
+        </div>
+        <div class="form-group">
+            Image Url:
+            <input name="image_url" class="form-control" type="url">
+            <small>Optionally, include the URL of an image of your product.</small>
+        </div>
+        <div class="form-group">
+            <input class="form-control btn btn-outline-dark" type="submit" value="Create Listing">
+        </div>
+    </form>
+
+
+{% endblock %}
